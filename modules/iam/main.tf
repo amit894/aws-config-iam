@@ -90,3 +90,62 @@ resource "aws_config_config_rule" "iam_user_mfa" {
     depends_on = [aws_config_configuration_recorder.example]
 
 }
+
+
+resource "aws_config_config_rule" "iam_user_unused_credentials" {
+
+    name = "IAM_User_Unused_Credentials_Config_Rule"
+    input_parameters = jsonencode({ "maxCredentialUsageAge" = "30" })
+    description = "A config rule that checks whether the AWS IAM users users have passwords or active access keys that have not been used within the specified number of days you provided."
+
+    maximum_execution_frequency = "One_Hour"
+
+    source {
+        owner = "AWS"
+        source_identifier = "IAM_USER_UNUSED_CREDENTIALS_CHECK"
+    }
+    scope {
+        compliance_resource_types = []
+    }
+
+    depends_on = [aws_config_configuration_recorder.example]
+
+}
+
+resource "aws_config_config_rule" "iam_user_mfa_console" {
+
+    name = "MFA_Enabled_Console_Config_Rule"
+    description = "A config rule that checks whether the AWS IAM users have MFA enabled for Console Access."
+
+    maximum_execution_frequency = "One_Hour"
+
+    source {
+        owner = "AWS"
+        source_identifier = "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
+    }
+    scope {
+        compliance_resource_types = []
+    }
+
+    depends_on = [aws_config_configuration_recorder.example]
+
+}
+
+resource "aws_config_config_rule" "iam_user_root_key_check" {
+
+    name = "IAM_User_Root_Key_Check_Config_Rule"
+    description = "A config rule that checks whether Checks if the root user access key is available. The rule is COMPLIANT if the user access key does not exist"
+
+    maximum_execution_frequency = "One_Hour"
+
+    source {
+        owner = "AWS"
+        source_identifier = "IAM_ROOT_ACCESS_KEY_CHECK"
+    }
+    scope {
+        compliance_resource_types = []
+    }
+
+    depends_on = [aws_config_configuration_recorder.example]
+
+}
